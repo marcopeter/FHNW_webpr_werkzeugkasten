@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FailSafe</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script src="object.js"></script>
+<script src="../util/test.js"></script>
+
+<script>
+
+    const failSafe = val => callback => arg => {
+        try {
+            return callback(arg);
+        } catch (e) {
+            return val;
+        }
+    };
+
+    const doError    = x => { throw new Error() };
+    const errorCount = failSafe (1) (doError);
+
+    // Tests
+    writeLn(failSafe (false) (x=>x) (true));
+    writeLn(failSafe (true) (doError) ("Bla"));
+    writeLn(failSafe (false) (x=>x) (true) && failSafe (true) (doError) (null) && errorCount(null) === 1);
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

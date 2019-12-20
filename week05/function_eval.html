@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Function / eval</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+
+    // Function
+    /*
+    Function() is like eval() but declares
+    parameters and executes in the global
+    scope. It creates a reference.
+     */
+    // Function = Funktion die eine Funktion erzeugt
+    // Letzer param ist string der ausgeführt wird
+
+    // Bsp1
+    const add = Function('x','y','return x+y');
+    add(1, 2);
+    add(2, 3);
+
+    // Bsp2
+    let factor_ = 0.2;
+    const e = {revenue: 10000, bonus: null};
+
+    let bonusFormula = 'employee.revenue * 0.2';
+    const bonusCalculation = Function('employee', 'return employee.bonus = ' + bonusFormula);
+
+    bonusCalculation(e);
+    writeLn(e.bonus);
+    writeLn(e.revenue * factor_);
+    writeLn(e.bonus === e.revenue * factor_);
+
+
+    //-----------------------------
+
+
+    // eval
+    /*
+    eval() works as if the code was copied
+    verbatim in the place of the eval,
+    i.e. you share the scope.
+     */
+
+    // Bsp1
+    let res = eval("1 + 2");
+    writeLn(res);
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

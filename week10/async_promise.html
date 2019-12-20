@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Async / Promise</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script src="../util/test.js"></script>
+
+<script>
+
+    // Promise
+    const processEven = i => new Promise( (resolve, reject) => {
+            if (i % 2 === 0) {
+                resolve(i);
+            } else {
+                reject(i);
+            }
+        }
+    );
+
+    // Test
+    processEven(4)
+        .then ( it => {console.log(it); return it} )
+        .then ( it => processEven(it+1))
+        .catch( err => console.log( "Error: " + err))
+
+
+    // Promise / await
+    const idPromise = x => new Promise( resolve => resolve(x));
+    const failPromise = err => new Promise( (resolve, reject) => reject(err));
+
+    const writer = x => {
+        document.writeln(x);
+        return idPromise(x);
+    };
+
+    const inc = n => idPromise(n+1);
+    const filterEven = n => n % 2 === 0 ? idPromise(n) : failPromise("not even");
+
+    const foo = async i => {
+        let x = await idPromise(i);
+        while(x < 4) {
+            x = await filterEven(x);
+            x = await writer(x);
+            x = await inc(x);
+        }
+    };
+
+    foo(1);
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

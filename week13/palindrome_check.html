@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Palindrome Check</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script src="../util/test.js"></script>
+
+<script>
+
+    const str2chars = str  => [...str];            // convert a string to an array of chars
+    const isAlpha   = char => char.match(/[a-z]/); // char is in the alphabet
+
+    const palindrome = elem => {
+        let elemArr = str2chars(elem.toLowerCase()).filter(isAlpha);
+        let reversedArr = [...elemArr].reverse();
+
+        return elemArr.every( (value, idx) => value === reversedArr[idx]);
+    };
+
+    // Tests
+    writeLn( palindrome('Marco') == false );  // true
+    writeLn( palindrome('ABBA') == true );  // true
+    writeLn( palindrome('Abba') == true );   // true
+    writeLn( palindrome('A man, a plan, a canal: Panama!') == true );  // true
+
+    writeLn(palindrome("Amore, Roma!")
+        && palindrome("Madam, I'm Adam!")
+        && palindrome("Never odd or even.")
+        && ! palindrome("Amore"));
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

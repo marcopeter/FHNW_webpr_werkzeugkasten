@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Functions</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+
+    function fun1()    { return 1; }
+
+    // alles true
+    writeLn( fun1() === 1 );            // true
+    writeLn( (fun1() === 0) === false); // true
+    writeLn( fun1() === 0 === false);   // true
+    writeLn( fun1() !== 0);             // true
+    writeLn( "-------------------" );
+
+    // Keine "Compile"-Fehler obwohl kein Parameter in fun1 -> JS hat keinen Compiler
+    writeLn( fun1(42) === 1 );          // true
+    writeLn( fun1(42, 41) === 1 );      // true
+    writeLn( fun1 === 1 );              // false
+    writeLn( "-------------------" );
+
+    // Funktion mit Parameter
+    // Zwei Funktion mit gleichem Namen, aber zweite überschreibt die erste -> Keine Fehler, keine Warning
+    // Code-Basis, zwei Leute, gleicher Name -> die "neue" / "untere" überschreibt
+    // => Kein überladen von Funktionen!
+    function fun2()    { return 1; }
+    function fun2(arg) { return arg; }
+    writeLn( "-------------------" );               
+
+    // Nicht fun2() wird aufgerufen sondern fun2(arg)
+    writeLn( fun2() !== 1  );            // true
+    // Kein Argument angegeben, also auch return undefined
+    writeLn( fun2() === undefined );     // true
+    // "Korrekte" benutzung
+    writeLn( fun2(42) === 42 );          // true
+    writeLn( "-------------------" );
+
+
+    // Kein Return in Body -> darf man das? Nein! Es wird nicht 1 zurückgeben
+    function noReturn()    { 1; }
+    writeLn( noReturn() === undefined );          // true
+    writeLn( "-------------------" );
+
+    // Lambda / "Fat Arrow Syntax"
+    // Der Arrow sagt das ist die Funktion von dem was links steht zu dem was rechts steht
+    // const -> Variable die sich nicht verändern darf
+    const noReturn2 = () => { 1; }; // <- {} ist ein Block, enthält Anweisungen. Block hat keinen Wert, ist undefined
+    writeLn( noReturn2() === undefined );          // true
+    writeLn( "-------------------" );
+
+    // Kein Block, nur Wert zurück
+    const noReturn3 = () => 1;
+    writeLn( noReturn3() === 1 );          // true
+    writeLn( "-------------------" );
+    //-> Wenn man geschweifte Klammer hat, braucht man ein return um etwas zurückzugeben
+
+    writeLn( noReturn() !== 1 );         // true -> nicht 1 wird zurückgegeben
+    writeLn( noReturn() === undefined ); // true
+    writeLn( noReturn2() !== 1 );        // true
+    writeLn( noReturn3() === 1 );        // true
+    writeLn( "-------------------" );
+
+
+
+    // Funktionen referenzieren
+    // Nicht die Funktion () sondern nur der Name referenziert die Funktion
+    // Funktionen können als Werte angeschaut werden
+    // Können auch in Array gepackt werden
+    // -> Funktionen sind auch nur Werte
+    const myfun = fun1;
+    const funs = [null, undefined, fun1, fun2];
+
+    writeLn( myfun() === 1 );
+    writeLn( funs[2]() === 1 );
+    writeLn( "-------------------" );
+
+
+
+    // Eine Funktion kann als return Wert auch eine Funktion haben
+    // -> Higher Order Function
+    // doit nimmt eine Funktion als Parameter, gibt eine Funktion (bla) zurück,
+    // welche dann auf ihr Argument die übergeben Funktion von doit anwendet
+    // waszutunist -> closure
+    function doit(waszutunist) {
+        return function bla(arg) { return waszutunist(arg) }
+    }
+
+    // Funktion als Argument an andere Funktion mitgeben
+    // Ergebnis von von doit(fun1) ist eine Funktion -> Somit kann diese wieder mit 10 aufgerufen werden
+    writeLn( doit(fun1)(10) === 1 );
+    writeLn( doit(fun2)(10) === 10 );
+    writeLn( "-------------------" );
+
+
+    // Gleiches wie oben aber als curried lambda
+    const doit2 = callme => arg => callme(arg);
+    writeLn( doit2(fun1)(10) === 1 );
+    writeLn( "-------------------" );
+
+
+    // Fehlt nur noch das Argument
+    const doFun2 = doit2(fun1);
+
+    writeLn( doFun2(10) === 1 );
+    writeLn( doFun2()   === 1 );
+
+    writeLn(1 === 1);
+    writeLn( "-------------------" );
+
+    function id(arg) {
+        return arg;
+    }
+
+    const id2 = arg => arg;
+
+    writeLn( id(1) === id2(1) );
+    writeLn( "-------------------" );
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

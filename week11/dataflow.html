@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dataflow</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script src="../util/test.js"></script>
+
+<script>
+
+    const DataFlowVariable = howto => {
+        let value = undefined;
+        return () => {
+            if (value !== undefined) { return value }
+            value = howto();
+            return value;
+        }
+    };
+
+    // Bsp
+    const x = DataFlowVariable(() => y() * 2);
+    let y = DataFlowVariable(() => 1);
+    y = DataFlowVariable(() => 2);
+    writeLn(x());
+
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>

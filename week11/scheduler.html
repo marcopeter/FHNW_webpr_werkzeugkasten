@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scheduler</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script src="../util/test.js"></script>
+
+<script>
+    const Scheduler = () => {
+        let inProcess = false;
+        const tasks = [];
+        function process() {
+            if (inProcess) return;
+            if (tasks.length === 0) return;
+            inProcess = true;
+            const task = tasks.pop();
+            const prom = new Promise( (ok, reject) => task(ok) );
+            prom.then( _ => {
+                inProcess = false;
+                process();
+            });
+        }
+        function add(task) {
+            tasks.unshift(task);
+            process();
+        }
+        return {
+            add: add,
+            addOk: task => add( ok => { task(); ok(); }) // convenience
+        }
+    };
+
+
+    /*
+     * Tests
+     */
+    test("dataflow-scheduler", assert => {
+
+        const result = [];
+
+        const scheduler = Scheduler();
+        scheduler.add(ok => {
+            setTimeout(_ => {   // we wait before pushing
+                result.push(1);
+                ok();
+            }, 100)
+        });
+        scheduler.add(ok => {   // we push "immediately"
+            result.push(2);
+            ok();
+        });
+        scheduler.addOk ( () => result.push(3)); // convenience
+
+        scheduler.add(ok => {
+            assert.equals(result[0], 1); // sequence is still ensured
+            assert.equals(result[1], 2);
+            assert.equals(result[2], 3);
+        });
+
+        scheduler.add(ok => {
+            writeLn(result);
+            ok();
+        });
+
+        setTimeout(_ => {   // we wait before pushing
+            console.log(result);
+            writeLn(result);
+        }, 500);
+
+        assert.true(true); // any assertion error will appear in the console, not in the report
+
+    });
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>

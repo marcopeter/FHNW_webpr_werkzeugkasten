@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MapFilterReducePair</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+
+    // Alle Array Elemente verdoppeln
+    const twice = a => a * 2;
+    document.writeln([1,2,3].map(twice).toString() === "2,4,6")
+
+
+    // Alle Array Elemente die nicht ganzzahlig durch 3 teilbar sind rausfiltern
+    const divides = x => y => y % x === 0;
+    document.writeln([1,2,3,4,5,6].filter(divides(3)).toString() === "3,6");
+
+
+    // Alle Array Elemente mit "-" als Trennzeichen zu einem String verbinden
+    const join = x => (accu, cur) => accu + x + cur;
+    document.writeln([1,2,3].reduce(join('-')) === '1-2-3');
+
+    // Array Elemente umgekehrt anordnen (reverse)
+    const preOrder = (accu, cur) => [cur].concat(accu);
+    document.writeln([1,2,3].reduce(preOrder, []).toString() === [3,2,1].toString());
+
+
+    // Pair and einige elementare Funktionen...
+    const Pair = first => last=> selector => selector(first)(last);
+
+    // atoms
+    const id    = x =>      x;
+    const konst = x => y => x;
+
+    // derived
+    const F = konst (id);
+    const T = konst;
+
+    const fst  = p => p(T);
+    const snd  = p => p(F);
+
+    // Pair1 === Pair2 ?
+    const pairEq = a => b => fst(a) === fst(b) && snd(a) === snd(b);
+
+    // Pair + Pair = Pair        // Monoid
+    const pairPlus = a => b => Pair(fst(a) + fst(b)) (snd(a) + snd(b) );
+
+    // Function and Pair = Pair  // Functor
+    const pairMap = f => p =>  Pair ( f(fst(p)) ) ( f(snd(p)) );
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Function / eval</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+
+    let xs1_ = [1,2,3,4,5];
+    let ys1_ = [1,2,3,4,5];
+
+    let xs2_ = [1,2,3,4,5];
+    let ys2_ = [1,2,3,4,4];
+
+    let xs3_ = [1,2,3,4,5];
+    let ys3_ = [1,2,3,4,5];
+
+    let xs4_ = [2,2,3,4,5];
+    let ys4_ = [1,3,3,4,5];
+
+    let xs5_ = [1,2,3,4,5];
+    let ys5_ = [1,2,3];
+
+    let xs6_ = [1,2,3];
+    let ys6_ = [1,2,3,4,5];
+
+    let xs7_ = [];
+    let ys7_ = [];
+
+    // Array equals on Array Prototype
+    Array.prototype.eq = function(ys) {
+        if(this.length !== ys.length) return false;
+        let result = true;
+        this.forEach((value, index) => {
+            if(value !== ys[index]) result = false;
+        });
+        return result;
+    };
+
+    writeLn( xs1_.eq(ys1_) );
+    writeLn( ! xs2_.eq(ys2_) );
+    writeLn( xs3_.eq(ys3_) );
+    writeLn(! xs3_.eq(ys4_) );
+    writeLn(! xs4_.eq(ys3_) );
+    writeLn(! xs5_.eq(ys5_) );
+    writeLn(! xs6_.eq(ys6_) );
+    writeLn( xs7_.eq(ys7_) );
+
+    writeLn( xs1_.eq(ys1_) && ! xs2_.eq(ys2_) && xs3_.eq(ys3_) && ! xs3_.eq(ys4_) && ! xs4_.eq(ys3_) );
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Callbacks</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script src="../util/test.js"></script>
+
+<script>
+
+    // length check
+    function handle1(callback) {
+        const result = [];
+        callback(result);
+        return result;
+    }
+    writeLn(handle1(it => it.push(1)).length === 1);
+
+
+    // Explicit return and length check
+    function handle2(callback) {
+        return callback([]);
+    }
+    writeLn(handle2(it => {
+        it.push(1);
+        return it;
+    }).length === 1);
+
+
+    // Make handle function return given array
+    function handle3(callback) {
+        const result = [];
+        return callback(result);
+    }
+    writeLn(handle3(() => [1,2,3]).length === 3);
+
+
+    // Multiple call of callback function
+    function handle4(count, callback) {
+        const result = [];
+        for (let i = 0; i < count; i++) {
+            callback(result);
+        }
+        return result;
+    }
+
+    writeLn(handle4(3, it => it.push(1)).length === 3);
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

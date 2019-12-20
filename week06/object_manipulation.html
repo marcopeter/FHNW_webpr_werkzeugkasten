@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Different object creations</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+
+    /*
+     Object creation
+     */
+    // set name via consctructor
+    class Person{
+        constructor(name) {
+            this.name = name;
+        }
+        isCool() {return this.name.length > 3 };
+    }
+    const p = new Person("Dierk");
+    writeLn(p.isCool());
+
+
+    // set name after object creation
+    class Person1{
+        isCool() {return this.name.length > 3 };
+    }
+    const p1 = new Person1();
+    p1.name = "Dierk";
+    writeLn(p1.isCool());
+
+
+    // override isCool function after object creation
+    class Person2{
+        constructor(name) {
+            this.name = name;
+        }
+        isCool() {return this.name.length > 3 };
+    }
+    const p2 = new Person2("Joe");
+    p2.isCool = () => true;
+    writeLn(p2.isCool());
+
+
+    // read name from object
+    class Person3{
+        constructor(name) {
+            this.name = name;
+        }
+        isCool() {return this.name.length > 3 };
+    }
+    const p3 = new Person3("Dierk");
+    writeLn(p3.name === "Dierk");
+
+
+    // override isCool function via prototype
+    class Person4{
+        constructor(name) {
+            this.name = name;
+        }
+        isCool() {return this.name.length > 3 };
+    }
+    const p4 = new Person4("Joe");
+    Person4.prototype.isCool = () => true;
+    writeLn(p4.isCool());
+
+
+    /*
+    Object prototype
+     */
+    // Set prototype of empty object
+    class Person7 { }
+    const p7 = {};
+    Object.setPrototypeOf(p7, Person7.prototype);
+    writeLn(p7 instanceof Person7);
+
+
+    // Apply Person prototype on Students prototype
+    class Person8 { }
+    class Student2 { }
+    const s2 = new Student2();
+    Object.setPrototypeOf(Student2.prototype, Person8.prototype);
+    writeLn(s2 instanceof Person8);
+
+
+    // Normal object creation via class and prototype check
+    class Person9 {
+        constructor(name) {
+            this.name = name;
+        }
+        isCool() {return this.name.length > 3 };
+    }
+    const p9 = new Person9("Dierk");
+    writeLn(p9 instanceof Person9);
+
+
+    // Student prototype is also Person.prototype because of inheritance
+    class Person10 { }
+    class Student3 extends Person10{ }
+    const s3 = new Student3();
+    writeLn(s3 instanceof Person10);
+
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

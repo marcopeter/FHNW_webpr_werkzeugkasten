@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Own thenable function</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+
+
+    // Version 1
+    /*
+    Function.prototype.then = function(f) {
+        const prev = this;
+        return function() {
+            return f.call(this, prev.apply(this, arguments));
+        }
+    };
+    */
+
+    // Version 2
+    /*
+    Function.prototype.then = function(next) {
+        const prev = this;
+        return function(x) {
+            return next(prev(x));
+        }
+    };
+    */
+
+    // Version 3
+    /*
+    Function.prototype.then = function(f) {
+        return function (x) {
+            return(f(this(x)));
+        }.bind(this)
+    };
+    */
+
+    // Version 4
+
+    Function.prototype.then = function(f) {
+        return x => f(this(x));
+    };
+
+    // Tests
+    const inc    = x => x + 1;
+    const double = x => x * 2;
+    const triple = x => x * 3;
+
+    writeLn( inc.then(double).then(double) (1) === 8 );
+
+    
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

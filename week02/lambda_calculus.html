@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lambda</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+    const id = x => x;
+    const konst = x => y => x;
+
+
+    // Auch kite genannt
+    //const snd = x => y => y;
+    // Kombinatoren haben rechts neben dem gleichheitszeichen keine "freien" varbiable
+    //const snd = x => id;
+    //const snd = x => konst(id)(x);
+    const snd = konst(id);
+
+
+    //const T = x => y => x;
+    //const T = x => y => konst(x)(y);
+    //const T = x => konst(x); // Eta Redutction
+    const T = konst;
+
+
+    //const F = x => y => y;
+    //const F = x => y => konst(id)(x)(y);
+    //const F = x => y => snd(x)(y);
+    //const F = x => snd(x); // Eta Reduction
+    const F = snd; // Eta Reduction
+
+
+    // x ist entweder true oder false / erster oder zweiter param zurück
+    //const and = x => y => x (y(T)(F)) (y(F)(F));
+    //const and = x => y => x (y(T)(F)) (F);
+    //const and = x => y => x (y(T)(F)) (x);
+    const and = x => y => x (y) (x);
+    //const and = x => y => (x)(y)(F); // oder so
+
+
+    //const or = x => y => (x) (y(T)(T)) (y(T)(F));
+    //const or = x => y => (x) (T) (y(T)(F));
+    //const or = x => y => (x) (x) (y(T)(F));
+    //const or = x => y => (x) (x) (y);
+    const or = x => (x) (x);
+
+    // const M => f => f(f); // Mockingbird
+    // const or = M;
+    //const or = x => y => (x)(T)(y); // oder so
+
+
+    const Pair = first => last => selector => selector(first)(last);
+    //const firstname = x => y => x;
+    const firstname = konst;
+    //const lastname = x => y => y;
+    const lastname = snd;
+
+
+    const Left   = x => fl => fr => fl(x);
+    const Right  = x => fl => fr => fr(x);
+    //const either = e => fl => fr => e (fl) (fr);
+    //const either = e => e ;
+    const either = id;
+    
+    
+    // Tests
+    // id
+    writeLn( id(1) === 1 );
+    writeLn( id(id) === id );
+
+    // konst
+    writeLn( konst(42)(0) === 42 );
+    writeLn( konst(42)(1) === 42 );
+    writeLn( konst(42)(null) === 42 );
+
+    // kite
+    writeLn( snd(null)(42) === 42 );
+
+    // true
+    writeLn( T(1)(0) === 1 );
+    writeLn( F(1)(0) === 0 );
+
+    // and
+    writeLn( and(F)(F) === F );
+    writeLn( and(T)(F) === F );
+    writeLn( and(F)(T) === F );
+    writeLn( and(T)(T) === T );
+
+    // or
+    writeLn( or(F)(F) === F );
+    writeLn( or(T)(F) === T );
+    writeLn( or(F)(T) === T );
+    writeLn( or(T)(T) === T );
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

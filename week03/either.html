@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Either</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script>
+
+    const Left = x => f => g => f(x); // ctor 1
+    const Right = x => f => g => g(x); // ctor 2
+    const either = e => f => g => e(f)(g); // accessor
+
+    const safeDiv = num => divisor =>
+        divisor === 0
+            ? Left("schlecht!")
+            : Right(num / divisor);
+
+    // Should write "schlecht!"
+    either( safeDiv(1)(0)  )
+    (writeLn)
+    (writeLn);
+
+    // Should write "0.5"
+    either( safeDiv(1)(2)  )
+    (writeLn)
+    (writeLn);
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

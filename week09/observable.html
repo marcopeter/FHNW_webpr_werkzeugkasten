@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Observable</title>
+</head>
+<body>
+<pre id="out"></pre>
+<script src="../util/test.js"></script>
+
+<script>
+
+    const Observable = value => {
+        const listeners = [];
+        return {
+            onChange: callback => {
+                listeners.push(callback);
+                callback(value, value);
+            },
+            getValue: ()       => value,
+            setValue: newValue => {
+                if (value === newValue) return;
+                const oldValue = value;
+                value = newValue;
+                listeners.forEach(callback => callback(value, oldValue));
+            }
+        }
+    };
+
+
+    const ObservableList = list => {
+        const addListeners = [];
+        const delListeners = [];
+        const removeAt     = array => index => array.splice(index, 1);
+        const removeItem   = array => item  => { const i = array.indexOf(item); if (i>=0) removeAt(array)(i); };
+        const listRemoveItem     = removeItem(list);
+        const delListenersRemove = removeAt(delListeners);
+        return {
+            onAdd: listener => addListeners.push(listener),
+            onDel: listener => delListeners.push(listener),
+            add: item => {
+                list.push(item);
+                addListeners.forEach( listener => listener(item))
+            },
+            del: item => {
+                listRemoveItem(item);
+                const safeIterate = [...delListeners]; // shallow copy as we might change listeners array while iterating
+                safeIterate.forEach( (listener, index) => listener(item, () => delListenersRemove(index) ));
+            },
+            removeDeleteListener: removeItem(delListeners),
+            count:   ()   => list.length,
+            countIf: pred => list.reduce( (sum, item) => pred(item) ? sum + 1 : sum, 0)
+        }
+    };
+
+
+    /*
+     * Tests
+     */
+    test("observable-value", assert => {
+
+        const obs = Observable("");
+
+        //  initial state
+        assert.equals(obs.getValue(),  "");
+
+        //  subscribers get notified
+        let found;
+        obs.onChange(val => found = val);
+        obs.setValue("firstValue");
+        assert.equals(found,  "firstValue");
+
+        //  value is updated
+        assert.equals(obs.getValue(),  "firstValue");
+
+        //  it still works when the receiver symbols changes
+        const newRef = obs;
+        newRef.setValue("secondValue");
+        // listener updates correctly
+        assert.equals(found,  "secondValue");
+
+        //  Attributes are isolated, no "new" needed
+        const secondAttribute = Observable("");
+
+        //  initial state
+        assert.equals(secondAttribute.getValue(),  "");
+
+        //  subscribers get notified
+        let secondFound;
+        secondAttribute.onChange(val => secondFound = val);
+        secondAttribute.setValue("thirdValue");
+        assert.equals(found,  "secondValue");
+        assert.equals(secondFound,  "thirdValue");
+
+        //  value is updated
+        assert.equals(secondAttribute.getValue(),  "thirdValue");
+
+    });
+
+    test("observable-list", assert => {
+        const raw  = [];
+        const list = ObservableList( raw ); // decorator pattern
+
+        assert.equals(list.count(), 0);
+        let addCount = 0;
+        let delCount = 0;
+        list.onAdd( item => addCount += item);
+        list.add(1);
+        assert.equals(addCount, 1);
+        assert.equals(list.count(), 1);
+        assert.equals(raw.length, 1);
+
+        list.onDel( item => delCount += item);
+        list.del(1);
+        assert.equals(delCount, 1);
+        assert.equals(list.count(), 0);
+        assert.equals(raw.length, 0);
+
+    });
+
+
+
+    function writeLn(message) {
+        const out = document.getElementById('out');
+        out.innerText += message + "\n";
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
