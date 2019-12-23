@@ -1,6 +1,7 @@
 import { DataFlowVariable } from '../dataflow/dataflow.js'
 
-export {startExcel, refresh, n}
+// Default export
+export default {startExcel, refresh, n}
 
 
 const Formulae =  {

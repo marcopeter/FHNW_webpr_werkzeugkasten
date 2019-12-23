@@ -1,4 +1,5 @@
-import { startExcel, refresh, n } from './excel.js'
+// Default import
+import Excel from './excel.js'
 import { Suite }                  from '../util/test.js'
 
 export const excelSuite = Suite('excel');
@@ -10,9 +11,9 @@ excelSuite.add("excel", assert => {
     let body = document.getElementsByTagName("BODY")[0];
     body.appendChild(tbody);
 
-    startExcel();
-    refresh();
-    assert.is(n(C3), 6);
+    Excel.startExcel();
+    Excel.refresh();
+    assert.is(Excel.n(C3), 6);
 
     body.removeChild(tbody);
 
